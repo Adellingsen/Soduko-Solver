@@ -1,10 +1,11 @@
 import javax.swing.*;
 import java.awt.event.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 
 public class BoardTray extends JTextField implements ActionListener
 {
-	private int number = 0;
+	private int number;
 	private boolean isStartNumber;
 
 	public BoardTray(){
@@ -18,22 +19,25 @@ public class BoardTray extends JTextField implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		number = Integer.parseInt(this.getText());
-		isStartNumber = true;
+		setTrayAsStartNumber();
+		
+	}
+
+	public void setTrayAsStartNumber()
+	{
+		this.number = Integer.parseInt(this.getText());;
 		this.setBackground(Color.LIGHT_GRAY);
-	}
-
-	public void setAsStartNumber(int number)
-	{
-		this.number = number;
 		isStartNumber = true;
+		this.setText(this.getText());
 	}
 
-	public void setNumber(int number)
+	public void setTray(int number)
 	{
 		this.number = number;
+		this.setText(Integer.toString(number));
+		this.update(this.getGraphics());
 	}
-
+	
 	public int getNumber()
 	{
 		return number;
@@ -50,5 +54,6 @@ public class BoardTray extends JTextField implements ActionListener
 		isStartNumber = false;
 		this.setBackground(Color.WHITE);
 		this.setText("");
+		this.update(this.getGraphics());
 	}
 }
