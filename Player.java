@@ -6,11 +6,6 @@ public class Player{
 	private static int col = 0;
 	private static int direction = 1;
 
-	public Player()
-	{
-
-	}
-
 	public static int getRow()
 	{
 		return row;

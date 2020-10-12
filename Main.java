@@ -8,7 +8,6 @@ import java.awt.event.*;
 
 public class Main
 {
-
 	private static final int ROWS = 9;
 	private static final int COLS = 9;
 	private static final int FORWARD = 1;
@@ -56,32 +55,40 @@ public class Main
 		mainFrame.setVisible(true);
 	}
 
-	public static void solve()
+	public static boolean solve()
 	{
-		int stepList[] = new int[2];
-		
-		
+		if(!setStartNumbers())
+		{
+			reset();
+			JOptionPane.showMessageDialog(mainFrame, "Wrong input", "Soduko Solver - Info", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		boolean numberIsSet = false;
+
 		while(player.getRow() < ROWS && player.getCol() < COLS)
 		{
 			if(!board[player.getRow()][player.getCol()].isStartNumber())
 			{
-				for(int number = board[player.getRow()][player.getCol()].getNumber() + 1; number <= 10; number++)
+				for(int number = board[player.getRow()][player.getCol()].getNumber() + 1; number <= 9; number++)
 				{	
-					if(Logic.rowColIsValid(board, number, player.getRow(), player.getCol()) && Logic.boxIsValid(board, number, 3*((int)player.getRow()/3), 3*((int)player.getCol()/3)) && number != 10)
+					if(Logic.rowColIsValid(board, number, player.getRow(), player.getCol()) && Logic.boxIsValid(board, number, 3*((int)player.getRow()/3), 3*((int)player.getCol()/3)))
 					{
 						board[player.getRow()][player.getCol()].setTray(number);
 						player.setDirection(FORWARD);
+						numberIsSet = true;
 						break;
 					}
-					if(number == 10)
-					{
-						board[player.getRow()][player.getCol()].resetTray();
-						player.setDirection(BACKWARD);
-					}
 				}
+				if(!numberIsSet)
+				{
+					board[player.getRow()][player.getCol()].resetTray();
+					player.setDirection(BACKWARD);
+				}
+				numberIsSet = false;
 			}
 			player.move();
 		}
+		return true;
 	}
 
 	public static void reset()
@@ -106,7 +113,7 @@ public class Main
 		}
 	}
 
-	public static void printBoard()
+	public static void printBoardInTerminal()
 	{
 		for(int i = 0; i < ROWS; i++)
 		{
@@ -118,8 +125,22 @@ public class Main
 		}
 	}
 
-	public static void setNumber(int i, int j, int number)
+	public static boolean setStartNumbers()
 	{
-		board[i][j].setTray(number);
+		for(int i = 0; i < ROWS; i++)
+		{
+			for(int j = 0; j < COLS; j++)
+			{
+				//fix if not right number
+				if(board[i][j].readNumber())
+				{
+					if(!board[i][j].setTrayAsStartNumber())
+					{
+						return false;
+					}
+				}
+			}	
+		}
+		return true;
 	}
 }
